@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=NetHack
+Comment=Nethack is a single player dungeon exploration game
+Exec=nethack
+Icon=nethack.xpm
+Terminal=true
+Type=Application
+Encoding=UTF-8
+Categories=Application;Game;Strategy;X-Fedora;
