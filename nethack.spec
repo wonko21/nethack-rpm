@@ -1,16 +1,16 @@
-%define nhgamedir /usr/games/nethack
+%define nhgamedir /usr/games/nethack-3.4.3
 %define nhdatadir /var/games/nethack
 
 Name:           nethack
 Version:        3.4.3
-Release:        1
-Summary:        A rouge-like single player dungeon exploration game
+Release:        1%{?dist}
+Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
 License:        NetHack General Public License
 URL:            http://nethack.org
 Source0:        http://dl.sf.net/%{name}/%{name}-343-src.tgz
-Source2:        %{name}.desktop
+Source1:        %{name}.desktop
 Patch0:         %{name}-%{version}-makefile.patch
 Patch1:         %{name}-%{version}-config.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -63,9 +63,9 @@ rm -rf $RPM_BUILD_ROOT
         CHOWN=/bin/true \
         CHGRP=/bin/true
 
+rm $RPM_BUILD_ROOT%{nhgamedir}/license
 rm -rf $RPM_BUILD_ROOT%{nhgamedir}/save
 mv $RPM_BUILD_ROOT%{nhgamedir}/recover $RPM_BUILD_ROOT%{_bindir}/nethack-recover
-chmod +x $RPM_BUILD_ROOT%{nhgamedir}/nethack
 
 install -d -m 0755 $RPM_BUILD_ROOT%{_mandir}/man6
 make -C doc MANDIR=$RPM_BUILD_ROOT%{_mandir}/man6 manpages
@@ -79,7 +79,7 @@ desktop-file-install \
         --add-category X-Fedora \
         --add-category Application \
         --add-category Game \
-        %{SOURCE2}
+        %{SOURCE1}
 
 
 %clean
@@ -93,7 +93,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man6/*
 %{_datadir}/pixmaps/nethack.xpm
 %{_datadir}/applications/fedora-nethack.desktop
-%{nhgamedir}/license
 %{nhgamedir}/nhdat
 %{_bindir}/nethack
 %{_bindir}/nethack-recover
