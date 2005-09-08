@@ -3,7 +3,7 @@
 
 Name:           nethack
 Version:        3.4.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
@@ -131,6 +131,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Sep 08 2005 Luke Macken <lmacken@redhat.com> 3.4.3-3
+- Point linker in the right direction using %{_lib} to fix x86_64 build issues
+
 * Tue Sep 06 2005 Luke Macken <lmacken@redhat.com> 3.4.3-2
 - Enable x11 support
 
