@@ -54,6 +54,10 @@ characters: you can pick your race, your role, and your gender.
 %{__sed} -i -e "s:/usr/games/lib/nethackdir:%{nhgamedir}:" \
         doc/nethack.6 doc/nethack.txt doc/recover.6 doc/recover.txt
 
+# Point the linker in the right direction
+%{__sed} -i -e "s:-L/usr/X11R6/lib:-L/usr/X11R6/%{_lib}:" \
+        src/Makefile util/Makefile
+
 
 %build
 make all
