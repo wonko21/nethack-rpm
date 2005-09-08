@@ -90,8 +90,8 @@ desktop-file-install \
 cd win/X11
 bdftopcf -o nh10.pcf nh10.bdf
 bdftopcf -o ibm.pcf ibm.bdf
-install -D ibm.pcf $RPM_BUILD_ROOT%{nhgamedir}/fonts/ibm.pcf
-install -D nh10.pcf $RPM_BUILD_ROOT%{nhgamedir}/fonts/nh10.pcf
+install -D -p -m 644 ibm.pcf $RPM_BUILD_ROOT%{nhgamedir}/fonts/ibm.pcf
+install -D -p -m 644 nh10.pcf $RPM_BUILD_ROOT%{nhgamedir}/fonts/nh10.pcf
 mkfontdir $RPM_BUILD_ROOT%{nhgamedir}/fonts
 
 %{__sed} -i -e 's:^!\(NetHack.tile_file.*\):\1:' \
@@ -116,7 +116,7 @@ rm -rf $RPM_BUILD_ROOT
 %{nhgamedir}/pet_mark.xbm
 %{nhgamedir}/rip.xpm
 %{nhgamedir}/x11tiles
-%{nhgamedir}/fonts/*
+%{nhgamedir}/fonts/
 %defattr(0664,root,games)
 %config(noreplace) %{nhdatadir}/record
 %config(noreplace) %{nhdatadir}/perm
