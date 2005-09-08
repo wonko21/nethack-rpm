@@ -1,0 +1,64 @@
+--- sys/unix/Makefile.top.orig	2005-06-24 21:11:44.000000000 -0400
++++ sys/unix/Makefile.top	2005-06-24 21:12:06.000000000 -0400
+@@ -40,9 +40,8 @@
+ SHELLDIR = $(PREFIX)/games
+ 
+ # per discussion in Install.X11 and Install.Qt
+-VARDATND = 
+ # VARDATND = x11tiles NetHack.ad pet_mark.xbm
+-# VARDATND = x11tiles NetHack.ad pet_mark.xbm rip.xpm
++VARDATND = x11tiles NetHack.ad pet_mark.xbm rip.xpm
+ # for Atari/Gem
+ # VARDATND = nh16.img title.img GEM_RSC.RSC rip.img
+ # for BeOS
+--- include/config.h.orig	2005-06-24 21:12:38.000000000 -0400
++++ include/config.h	2005-06-24 21:13:36.000000000 -0400
+@@ -43,7 +43,7 @@
+  * Some combinations make no sense.  See the installation document.
+  */
+ #define TTY_GRAPHICS	/* good old tty based graphics */
+-/* #define X11_GRAPHICS */	/* X11 interface */
++#define X11_GRAPHICS	/* X11 interface */
+ /* #define QT_GRAPHICS */	/* Qt interface */
+ /* #define GNOME_GRAPHICS */	/* Gnome interface */
+ /* #define MSWIN_GRAPHICS */	/* Windows NT, CE, Graphics */
+@@ -126,7 +126,7 @@
+  * would allow:
+  *  xpmtoppm <x11tiles.xpm | pnmscale 1.25 | ppmquant 90 >x11tiles_big.xpm
+  */
+-/* # define USE_XPM */		/* Disable if you do not have the XPM library */
++# define USE_XPM		/* Disable if you do not have the XPM library */
+ # ifdef USE_XPM
+ #  define GRAPHIC_TOMBSTONE	/* Use graphical tombstone (rip.xpm) */
+ # endif
+--- sys/unix/Makefile.src.orig	2005-06-24 21:14:49.000000000 -0400
++++ sys/unix/Makefile.src	2005-06-24 21:15:32.000000000 -0400
+@@ -214,8 +214,8 @@
+ 
+ #
+ #
+-WINSRC = $(WINTTYSRC)
+-WINOBJ = $(WINTTYOBJ)
++WINSRC = $(WINTTYSRC) $(WINX11SRC)
++WINOBJ = $(WINTTYOBJ) $(WINX11OBJ)
+ 
+ # on some systems the termcap library is in -ltermcap or -lcurses
+ # on 386 Xenix, the -ltermlib tputs() seems not to work; use -lcurses instead
+@@ -235,7 +235,7 @@
+ #
+ # libraries for X11
+ # If USE_XPM is defined in config.h, you will also need -lXpm here.
+-WINX11LIB = -lXaw -lXmu -lXext -lXt -lX11
++WINX11LIB = -lXaw -lXmu -lXext -lXt -lX11 -lXpm
+ # WINX11LIB = -lXaw -lXmu -lXt -lX11
+ # WINX11LIB = -lXaw -lXmu -lXext -lXt -lXpm -lX11 -lm
+ # WINX11LIB = -lXaw -lXmu -lXpm -lXext -lXt -lX11 -lSM -lICE -lm # BSD/OS 2.0
+@@ -255,7 +255,7 @@
+ # libraries for BeOS 
+ WINBELIB = -lbe
+ 
+-WINLIB = $(WINTTYLIB)
++WINLIB = $(WINTTYLIB) $(WINX11LIB)
+ 
+ # any other strange libraries your system needs (for Sysunix only -- the more
+ # specialized targets should already be right)

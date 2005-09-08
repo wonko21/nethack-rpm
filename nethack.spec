@@ -3,7 +3,7 @@
 
 Name:           nethack
 Version:        3.4.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
@@ -13,9 +13,13 @@ Source0:        http://dl.sf.net/%{name}/%{name}-343-src.tgz
 Source1:        %{name}.desktop
 Patch0:         %{name}-%{version}-makefile.patch
 Patch1:         %{name}-%{version}-config.patch
+Patch2:         %{name}-%{version}-x11.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:  ncurses-devel, bison, flex, desktop-file-utils
+BuildRequires:  ncurses-devel
+BuildRequires:  bison, flex, desktop-file-utils
+BuildRequires:  xorg-x11-devel, xorg-x11-font-utils
+
 Obsoletes:      nethack-falconseye <= 1.9.4-6.a
 
 
@@ -39,6 +43,7 @@ characters: you can pick your race, your role, and your gender.
 %setup -q
 %patch0 -b .makefile
 %patch1 -b .config
+%patch2 -b .x11
 (source sys/unix/setup.sh)
 
 # Set our paths
@@ -81,6 +86,17 @@ desktop-file-install \
         --add-category Game \
         %{SOURCE1}
 
+# Install the fonts for the X11 interface
+cd win/X11
+bdftopcf -o nh10.pcf nh10.bdf
+bdftopcf -o ibm.pcf ibm.bdf
+install -D ibm.pcf $RPM_BUILD_ROOT%{nhgamedir}/fonts/ibm.pcf
+install -D nh10.pcf $RPM_BUILD_ROOT%{nhgamedir}/fonts/nh10.pcf
+mkfontdir $RPM_BUILD_ROOT%{nhgamedir}/fonts
+
+%{__sed} -i -e 's:^!\(NetHack.tile_file.*\):\1:' \
+        $RPM_BUILD_ROOT%{nhgamedir}/NetHack.ad
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -96,6 +112,11 @@ rm -rf $RPM_BUILD_ROOT
 %{nhgamedir}/nhdat
 %{_bindir}/nethack
 %{_bindir}/nethack-recover
+%{nhgamedir}/NetHack.ad
+%{nhgamedir}/pet_mark.xbm
+%{nhgamedir}/rip.xpm
+%{nhgamedir}/x11tiles
+%{nhgamedir}/fonts/*
 %defattr(0664,root,games)
 %config(noreplace) %{nhdatadir}/record
 %config(noreplace) %{nhdatadir}/perm
@@ -106,5 +127,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Sep 06 2005 Luke Macken <lmacken@redhat.com> 3.4.3-2
+- Enable x11 support
+
 * Sun Jul 10 2005 Luke Macken <lmacken@redhat.com> 3.4.3-1
 - Initial package for Fedora Extras
