@@ -3,7 +3,7 @@
 
 Name:           nethack
 Version:        3.4.3
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
@@ -18,7 +18,8 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  ncurses-devel
 BuildRequires:  bison, flex, desktop-file-utils
-BuildRequires:  xorg-x11-devel, xorg-x11-font-utils
+BuildRequires:  bdftopcf, mkfontdir, libX11-devel, libXaw-devel, libXext-devel
+BuildRequires:  libXmu-devel, libXpm-devel, libXt-devel
 
 Obsoletes:      nethack-falconseye <= 1.9.4-6.a
 
@@ -96,10 +97,12 @@ bdftopcf -o nh10.pcf nh10.bdf
 bdftopcf -o ibm.pcf ibm.bdf
 install -D -p -m 644 ibm.pcf $RPM_BUILD_ROOT%{nhgamedir}/fonts/ibm.pcf
 install -D -p -m 644 nh10.pcf $RPM_BUILD_ROOT%{nhgamedir}/fonts/nh10.pcf
-mkfontdir $RPM_BUILD_ROOT%{nhgamedir}/fonts
 
 %{__sed} -i -e 's:^!\(NetHack.tile_file.*\):\1:' \
         $RPM_BUILD_ROOT%{nhgamedir}/NetHack.ad
+
+%post
+mkfontdir $RPM_BUILD_ROOT%{nhgamedir}/fonts
 
 
 %clean
@@ -131,6 +134,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Nov 11 2005 Luke Macken <lmacken@redhat.com> 3.4.3-4
+- Utilize modular xorg
+
 * Thu Sep 08 2005 Luke Macken <lmacken@redhat.com> 3.4.3-3
 - Point linker in the right direction using %%{_lib} to fix x86_64 build issues
 
