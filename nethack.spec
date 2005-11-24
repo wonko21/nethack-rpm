@@ -3,7 +3,7 @@
 
 Name:           nethack
 Version:        3.4.3
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
@@ -20,8 +20,6 @@ BuildRequires:  ncurses-devel
 BuildRequires:  bison, flex, desktop-file-utils
 BuildRequires:  bdftopcf, mkfontdir, libX11-devel, libXaw-devel, libXext-devel
 BuildRequires:  libXmu-devel, libXpm-devel, libXt-devel
-
-Obsoletes:      nethack-falconseye <= 1.9.4-6.a
 
 
 %description
@@ -73,7 +71,6 @@ rm -rf $RPM_BUILD_ROOT
         CHOWN=/bin/true \
         CHGRP=/bin/true
 
-rm $RPM_BUILD_ROOT%{nhgamedir}/license
 rm -rf $RPM_BUILD_ROOT%{nhgamedir}/save
 mv $RPM_BUILD_ROOT%{nhgamedir}/recover $RPM_BUILD_ROOT%{_bindir}/nethack-recover
 
@@ -134,6 +131,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Nov 23 2005 Luke Macken <lmacken@redhat.com> 3.4.3-5
+- Keep the license in the game directory (Bug #173385)
+- Don't obsolete falconseye anymore (Bug #173385)
+
 * Fri Nov 11 2005 Luke Macken <lmacken@redhat.com> 3.4.3-4
 - Utilize modular xorg
 
