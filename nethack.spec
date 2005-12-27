@@ -3,7 +3,7 @@
 
 Name:           nethack
 Version:        3.4.3
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
@@ -131,6 +131,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Dec 27 2005 Luke Macken <lmacken@redhat.com> 3.4.3-6
+- Rebuild
+
 * Wed Nov 23 2005 Luke Macken <lmacken@redhat.com> 3.4.3-5
 - Keep the license in the game directory (Bug #173385)
 - Don't obsolete falconseye anymore (Bug #173385)
