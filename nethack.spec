@@ -3,7 +3,7 @@
 
 Name:           nethack
 Version:        3.4.3
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
@@ -16,7 +16,7 @@ Patch1:         %{name}-%{version}-config.patch
 Patch2:         %{name}-%{version}-x11.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:  ncurses-devel
+BuildRequires:  ncurses-devel, groff
 BuildRequires:  bison, flex, desktop-file-utils
 BuildRequires:  bdftopcf, mkfontdir, libX11-devel, libXaw-devel, libXext-devel
 BuildRequires:  libXmu-devel, libXpm-devel, libXt-devel
@@ -131,6 +131,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Feb 15 2006 Luke Macken <lmacken@redhat.com> 3.4.3-8
+- Add groff to BuildRequires
+
 * Tue Feb 14 2006 Luke Macken <lmacken@redhat.com> 3.4.3-7
 - Rebuild for FE5
 
