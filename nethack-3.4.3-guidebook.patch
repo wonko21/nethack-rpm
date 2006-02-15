@@ -1,0 +1,15 @@
+--- sys/unix/Makefile.doc.orig	2006-02-15 16:47:41.000000000 -0500
++++ sys/unix/Makefile.doc	2006-02-15 16:47:52.000000000 -0500
+@@ -20,10 +20,10 @@
+ 
+ # Use the "cat" GUIDECMD if nroff and/or tbl and/or col are not installed
+ # Not appropriate for creating Guidebook.txt.
+-# GUIDECMD = cat Guidebook.txt
++GUIDECMD = cat Guidebook.txt
+ # The following works better with groff-1.18, eg on Linux
+ # GUIDECMD = tbl tmac.n Guidebook.mn | nroff -c -Tascii | $(COLCMD)
+-GUIDECMD = tbl tmac.n Guidebook.mn | nroff | $(COLCMD)
++# GUIDECMD = tbl tmac.n Guidebook.mn | nroff | $(COLCMD)
+ 
+ # the basic guidebook
+ Guidebook:	Guidebook.mn

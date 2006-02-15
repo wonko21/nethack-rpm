@@ -3,7 +3,7 @@
 
 Name:           nethack
 Version:        3.4.3
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
@@ -14,9 +14,10 @@ Source1:        %{name}.desktop
 Patch0:         %{name}-%{version}-makefile.patch
 Patch1:         %{name}-%{version}-config.patch
 Patch2:         %{name}-%{version}-x11.patch
+Patch3:         %{name}-%{version}-guidebook.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:  ncurses-devel, groff
+BuildRequires:  ncurses-devel
 BuildRequires:  bison, flex, desktop-file-utils
 BuildRequires:  bdftopcf, mkfontdir, libX11-devel, libXaw-devel, libXext-devel
 BuildRequires:  libXmu-devel, libXpm-devel, libXt-devel
@@ -43,6 +44,7 @@ characters: you can pick your race, your role, and your gender.
 %patch0 -b .makefile
 %patch1 -b .config
 %patch2 -b .x11
+%patch3 -b .guidebook
 (source sys/unix/setup.sh)
 
 # Set our paths
@@ -121,6 +123,7 @@ rm -rf $RPM_BUILD_ROOT
 %{nhgamedir}/rip.xpm
 %{nhgamedir}/x11tiles
 %{nhgamedir}/fonts/
+%{nhgamedir}/license
 %defattr(0664,root,games)
 %config(noreplace) %{nhdatadir}/record
 %config(noreplace) %{nhdatadir}/perm
@@ -131,6 +134,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Feb 15 2006 Luke Macken <lmacken@redhat.com> 3.4.3-9
+- Add nethack-3.4.3-guidebook.patch to fix issues with generating the Guidebook
+  (this patch also removes the need for our groff dep)
+
 * Wed Feb 15 2006 Luke Macken <lmacken@redhat.com> 3.4.3-8
 - Add groff to BuildRequires
 
