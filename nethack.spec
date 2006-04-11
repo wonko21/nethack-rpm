@@ -3,7 +3,7 @@
 
 Name:           nethack
 Version:        3.4.3
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
@@ -101,7 +101,7 @@ install -D -p -m 644 nh10.pcf $RPM_BUILD_ROOT%{nhgamedir}/fonts/nh10.pcf
         $RPM_BUILD_ROOT%{nhgamedir}/NetHack.ad
 
 %post
-mkfontdir $RPM_BUILD_ROOT%{nhgamedir}/fonts
+mkfontdir %{nhgamedir}/fonts
 
 
 %clean
@@ -134,6 +134,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Apr 10 2006 Luke Macken <lmacken@redhat.com> 3.4.3-10
+- Remove $RPM_BUILD_ROOT from %post (Bug #188008)
+
 * Wed Feb 15 2006 Luke Macken <lmacken@redhat.com> 3.4.3-9
 - Add nethack-3.4.3-guidebook.patch to fix issues with generating the Guidebook
   (this patch also removes the need for our groff dep)
