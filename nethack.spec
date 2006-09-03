@@ -3,7 +3,7 @@
 
 Name:           nethack
 Version:        3.4.3
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
@@ -134,6 +134,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep  3 2006 Luke Macken <lmacken@redhat.com> 3.4.3-11
+- Rebuild for FC6
+
 * Mon Apr 10 2006 Luke Macken <lmacken@redhat.com> 3.4.3-10
 - Remove $RPM_BUILD_ROOT from %post (Bug #188008)
 
