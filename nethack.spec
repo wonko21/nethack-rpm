@@ -3,7 +3,7 @@
 
 Name:           nethack
 Version:        3.4.3
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
@@ -118,12 +118,7 @@ rm -rf $RPM_BUILD_ROOT
 %{nhgamedir}/nhdat
 %{_bindir}/nethack
 %{_bindir}/nethack-recover
-%{nhgamedir}/NetHack.ad
-%{nhgamedir}/pet_mark.xbm
-%{nhgamedir}/rip.xpm
-%{nhgamedir}/x11tiles
-%{nhgamedir}/fonts/
-%{nhgamedir}/license
+%{nhgamedir}
 %defattr(0664,root,games)
 %config(noreplace) %{nhdatadir}/record
 %config(noreplace) %{nhdatadir}/perm
@@ -134,6 +129,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Oct 16 2006 Luke Macken <lmacken@redhat.com> 3.4.3-12
+- Own /usr/games/nethack-3.4.3
+
 * Sun Sep  3 2006 Luke Macken <lmacken@redhat.com> 3.4.3-11
 - Rebuild for FC6
 
