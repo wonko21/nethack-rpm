@@ -3,7 +3,7 @@
 
 Name:           nethack
 Version:        3.4.3
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
@@ -16,6 +16,7 @@ Patch1:         %{name}-%{version}-config.patch
 Patch2:         %{name}-%{version}-x11.patch
 Patch3:         %{name}-%{version}-guidebook.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Requires(post): xorg-x11-font-utils
 
 BuildRequires:  ncurses-devel
 BuildRequires:  bison, flex, desktop-file-utils
@@ -129,6 +130,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Jul 08 2007 Florian La Roche <laroche@redhat.com> 3.4.3-13
+- require xorg-x11-font-utils (to run mkfontdir) for post script
+
 * Mon Oct 16 2006 Luke Macken <lmacken@redhat.com> 3.4.3-12
 - Own /usr/games/nethack-3.4.3
 
