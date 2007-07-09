@@ -3,7 +3,7 @@
 
 Name:           nethack
 Version:        3.4.3
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
@@ -130,6 +130,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jul  9 2007 Luke Macken <lmacken@redhat.com> 3.4.3-14
+- Fix nethack.desktop (Bug #247373)
+
 * Sun Jul 08 2007 Florian La Roche <laroche@redhat.com> 3.4.3-13
 - require xorg-x11-font-utils (to run mkfontdir) for post script
 
