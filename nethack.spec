@@ -3,7 +3,7 @@
 
 Name:           nethack
 Version:        3.4.3
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
@@ -130,6 +130,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Aug 21 2007 Luke Macken <lmacken@redhat.com> 3.4.3-15
+- Rebuild
+
 * Mon Jul  9 2007 Luke Macken <lmacken@redhat.com> 3.4.3-14
 - Fix nethack.desktop (Bug #247373)
 
