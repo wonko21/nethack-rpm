@@ -3,7 +3,7 @@
 
 Name:           nethack
 Version:        3.4.3
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
@@ -103,7 +103,13 @@ install -D -p -m 644 nh10.pcf $RPM_BUILD_ROOT%{nhgamedir}/fonts/nh10.pcf
 
 %post
 mkfontdir %{nhgamedir}/fonts
+if [ ! -L /etc/X11/fontpath.d/nethack ] ; then
+    ln -s %{nhgamedir}/fonts /etc/X11/fontpath.d/nethack
+fi
 
+%preun
+rm /etc/X11/fontpath.d/nethack
+rm %{nhgamedir}/fonts/fonts.dir
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -130,6 +136,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jan 17 2008 Luke Macken <lmacken@redhat.com> 3.4.3-16
+- Create a symlink to our fonts in /etc/X11/fontpath.d (Bug #221692)
+
 * Tue Aug 21 2007 Luke Macken <lmacken@redhat.com> 3.4.3-15
 - Rebuild
 
