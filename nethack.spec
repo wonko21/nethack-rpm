@@ -3,7 +3,7 @@
 
 Name:           nethack
 Version:        3.4.3
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
@@ -136,6 +136,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Feb  8 2008 Luke Macken <lmacken@redhat.com> - 3.4.3-17
+- Rebuild for gcc 4.3
+
 * Thu Jan 17 2008 Luke Macken <lmacken@redhat.com> 3.4.3-16
 - Create a symlink to our fonts in /etc/X11/fontpath.d (Bug #221692)
 
