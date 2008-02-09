@@ -136,7 +136,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Feb  8 2008 Luke Macken <lmacken@redhat.com> - 3.4.3-17
+* Fri Feb  8 2008 Luke Macken <lmacken@redhat.com> - 3.4.3-17
 - Rebuild for gcc 4.3
 
 * Thu Jan 17 2008 Luke Macken <lmacken@redhat.com> 3.4.3-16
