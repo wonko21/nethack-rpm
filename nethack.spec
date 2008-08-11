@@ -3,11 +3,11 @@
 
 Name:           nethack
 Version:        3.4.3
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
-License:        NetHack General Public License
+License:        NGPL
 URL:            http://nethack.org
 Source0:        http://dl.sf.net/%{name}/%{name}-343-src.tgz
 Source1:        %{name}.desktop
@@ -136,6 +136,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Aug 11 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 3.4.3-18
+- fix license tag
+
 * Fri Feb  8 2008 Luke Macken <lmacken@redhat.com> - 3.4.3-17
 - Rebuild for gcc 4.3
 
