@@ -17,8 +17,8 @@ Patch2:         %{name}-%{version}-x11.patch
 Patch3:         %{name}-%{version}-guidebook.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires(post): xorg-x11-font-utils
-Requires(post):	 core-utils
-Requires(preun): core-utils
+Requires(post):	 coreutils
+Requires(preun): coreutils
 
 BuildRequires:  ncurses-devel
 BuildRequires:  bison, flex, desktop-file-utils
