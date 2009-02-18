@@ -3,7 +3,7 @@
 
 Name:           nethack
 Version:        3.4.3
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
@@ -17,6 +17,8 @@ Patch2:         %{name}-%{version}-x11.patch
 Patch3:         %{name}-%{version}-guidebook.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires(post): xorg-x11-font-utils
+Requires(post):	 core-utils
+Requires(preun): core-utils
 
 BuildRequires:  ncurses-devel
 BuildRequires:  bison, flex, desktop-file-utils
@@ -136,6 +138,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Feb 18 2009 Jochen Schmitt <Jochen herr-schmitt de> - 3.4.3-19
+- Add missing Requires
+
 * Mon Aug 11 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 3.4.3-18
 - fix license tag
 
