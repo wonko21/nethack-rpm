@@ -1,9 +1,11 @@
-%define nhgamedir /usr/games/nethack-3.4.3
-%define nhdatadir /var/games/nethack
+%global nhgamedir /usr/games/nethack-3.4.3
+%global nhdatadir /var/games/nethack
+
+%global fontname nethack-bitmap
 
 Name:           nethack
 Version:        3.4.3
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
@@ -16,14 +18,13 @@ Patch1:         %{name}-%{version}-config.patch
 Patch2:         %{name}-%{version}-x11.patch
 Patch3:         %{name}-%{version}-guidebook.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Requires(post): xorg-x11-font-utils
-Requires(post):	 coreutils
-Requires(preun): coreutils
+Requires:       %{fontname}-fonts-core
 
 BuildRequires:  ncurses-devel
 BuildRequires:  bison, flex, desktop-file-utils
 BuildRequires:  bdftopcf, mkfontdir, libX11-devel, libXaw-devel, libXext-devel
 BuildRequires:  libXmu-devel, libXpm-devel, libXt-devel
+BuildRequires:  fontpackages-devel
 
 
 %description
@@ -40,6 +41,29 @@ Each game presents a different landscape - the random number generator
 provides an essentially unlimited number of variations of the dungeon
 and its denizens to be discovered by the player in one of a number of
 characters: you can pick your race, your role, and your gender.
+
+
+%package -n %{fontname}-fonts
+Summary:        Bitmap fonts for Nethack
+Group:          User Interface/X
+BuildArch:      noarch
+Requires:       fontpackages-filesystem
+
+%description -n %{fontname}-fonts
+Bitmap fonts for Nethack.
+
+%package -n %{fontname}-fonts-core
+Summary:         X11 core fonts configuration for %{fontname}
+Group:           User Interface/X
+BuildArch:      noarch
+Requires:        %{fontname}-fonts
+Requires(post):  %{fontname}-fonts
+Requires(post):  xorg-x11-font-utils
+Requires(post):	 coreutils
+Requires(preun): coreutils
+
+%description -n %{fontname}-fonts-core
+X11 core fonts configuration for %{fontname}.
 
 
 %prep
@@ -97,21 +121,24 @@ desktop-file-install \
 cd win/X11
 bdftopcf -o nh10.pcf nh10.bdf
 bdftopcf -o ibm.pcf ibm.bdf
-install -D -p -m 644 ibm.pcf $RPM_BUILD_ROOT%{nhgamedir}/fonts/ibm.pcf
-install -D -p -m 644 nh10.pcf $RPM_BUILD_ROOT%{nhgamedir}/fonts/nh10.pcf
+install -m 0755 -d $RPM_BUILD_ROOT%{_fontdir}
+install -m 0644 -p *.pcf $RPM_BUILD_ROOT%{_fontdir}
 
 %{__sed} -i -e 's:^!\(NetHack.tile_file.*\):\1:' \
         $RPM_BUILD_ROOT%{nhgamedir}/NetHack.ad
 
-%post
-mkfontdir %{nhgamedir}/fonts
+
+%post -n %{fontname}-fonts-core
+mkfontdir %{_fontdir}
 if [ ! -L /etc/X11/fontpath.d/nethack ] ; then
-    ln -s %{nhgamedir}/fonts /etc/X11/fontpath.d/nethack
+    ln -s %{_fontdir} /etc/X11/fontpath.d/nethack
 fi
 
-%preun
-rm /etc/X11/fontpath.d/nethack
-rm %{nhgamedir}/fonts/fonts.dir
+%preun -n %{fontname}-fonts-core
+if [ $1 -eq 0 ] ; then 
+    rm /etc/X11/fontpath.d/nethack
+    rm %{_fontdir}/fonts.dir
+fi;
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -136,8 +163,16 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0775,root,games) %dir %{nhdatadir}/save
 %attr(2755,root,games) %{nhgamedir}/nethack
 
+%_font_pkg -n bitmap *.pcf
+
+%files -n %{fontname}-fonts-core
+%defattr(-,root,root,-)
 
 %changelog
+* Fri Jul 10 2009 Luke Macken <lmacken@redhat.com> - 3.4.3-21
+- Apply a patch from Iain Arnell to update our spec to comply with
+  the new font packaging guidelines (#505613)
+
 * Wed Feb 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4.3-20
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 
