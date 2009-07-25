@@ -5,7 +5,7 @@
 
 Name:           nethack
 Version:        3.4.3
-Release:        21%{?dist}
+Release:        22%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
@@ -169,6 +169,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 %changelog
+* Sat Jul 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4.3-22
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
+
 * Fri Jul 10 2009 Luke Macken <lmacken@redhat.com> - 3.4.3-21
 - Apply a patch from Iain Arnell to update our spec to comply with
   the new font packaging guidelines (#505613)
