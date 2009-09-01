@@ -5,7 +5,7 @@
 
 Name:           nethack
 Version:        3.4.3
-Release:        22%{?dist}
+Release:        23%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
@@ -112,9 +112,8 @@ install -D -p -m 0644 win/X11/nh_icon.xpm \
 desktop-file-install \
         --vendor fedora \
         --dir $RPM_BUILD_ROOT%{_datadir}/applications \
-        --add-category X-Fedora \
-        --add-category Application \
         --add-category Game \
+        --add-category RolePlaying \
         %{SOURCE1}
 
 # Install the fonts for the X11 interface
@@ -169,6 +168,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 %changelog
+* Tue Sep 01 2009 Luke Macken <lmacken@redhat.com> - 3.4.3-23
+- Fix the categories for the nethack desktop entry (#485362)
+
 * Sat Jul 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4.3-22
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
 
