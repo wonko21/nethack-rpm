@@ -5,13 +5,13 @@
 
 Name:           nethack
 Version:        3.4.3
-Release:        23%{?dist}
+Release:        24%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
 License:        NGPL
 URL:            http://nethack.org
-Source0:        http://dl.sf.net/%{name}/%{name}-343-src.tgz
+Source0:        http://downloads.sourceforge.net/%{name}/%{name}-343-src.tgz
 Source1:        %{name}.desktop
 Patch0:         %{name}-%{version}-makefile.patch
 Patch1:         %{name}-%{version}-config.patch
@@ -168,6 +168,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 %changelog
+* Mon Jan 11 2010 Luke Macken <lmacken@redhat.com> - 3.4.3-24
+- Fix the source URL
+
 * Tue Sep 01 2009 Luke Macken <lmacken@redhat.com> - 3.4.3-23
 - Fix the categories for the nethack desktop entry (#485362)
 
