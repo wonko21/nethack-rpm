@@ -5,7 +5,7 @@
 
 Name:           nethack
 Version:        3.4.3
-Release:        24%{?dist}
+Release:        25%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
@@ -168,6 +168,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 %changelog
+* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4.3-25
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
 * Mon Jan 11 2010 Luke Macken <lmacken@redhat.com> - 3.4.3-24
 - Fix the source URL
 
