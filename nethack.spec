@@ -5,7 +5,7 @@
 
 Name:           nethack
 Version:        3.4.3
-Release:        27%{?dist}
+Release:        28%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
@@ -110,7 +110,6 @@ install -D -p -m 0644 win/X11/nh_icon.xpm \
         $RPM_BUILD_ROOT%{_datadir}/pixmaps/nethack.xpm
 
 desktop-file-install \
-        --vendor fedora \
         --dir $RPM_BUILD_ROOT%{_datadir}/applications \
         --add-category Game \
         --add-category RolePlaying \
@@ -149,7 +148,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc dat/opthelp dat/wizhelp
 %{_mandir}/man6/*
 %{_datadir}/pixmaps/nethack.xpm
-%{_datadir}/applications/fedora-nethack.desktop
+%{_datadir}/applications/nethack.desktop
 %{nhgamedir}/nhdat
 %{_bindir}/nethack
 %{_bindir}/nethack-recover
@@ -168,6 +167,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 %changelog
+* Tue Feb 12 2013 Jon Ciesla <limburgher@gmail.com> - 3.4.3-28
+- Drop desktop vendor tag.
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4.3-27
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
