@@ -5,7 +5,7 @@
 
 Name:           nethack
 Version:        3.4.3
-Release:        28%{?dist}
+Release:        29%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
@@ -167,6 +167,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 %changelog
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4.3-29
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Tue Feb 12 2013 Jon Ciesla <limburgher@gmail.com> - 3.4.3-28
 - Drop desktop vendor tag.
 
