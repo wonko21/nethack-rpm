@@ -5,7 +5,7 @@
 
 Name:           nethack
 Version:        3.4.3
-Release:        30%{?dist}
+Release:        31%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
@@ -17,6 +17,7 @@ Patch0:         %{name}-%{version}-makefile.patch
 Patch1:         %{name}-%{version}-config.patch
 Patch2:         %{name}-%{version}-x11.patch
 Patch3:         %{name}-%{version}-guidebook.patch
+Patch4:         %{name}-%{version}-format-security.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires:       %{fontname}-fonts-core
 
@@ -72,6 +73,7 @@ X11 core fonts configuration for %{fontname}.
 %patch1 -b .config
 %patch2 -b .x11
 %patch3 -b .guidebook
+%patch4 -p1 -b .format-security
 (source sys/unix/setup.sh)
 
 # Set our paths
@@ -167,6 +169,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 %changelog
+* Wed Jun 18 2014 Luke Macken <lmacken@redhat.com> - 3.4.3-31
+- Apply a patch to fix the build with -Werror=format-security (#1037215, #1106286)
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4.3-30
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
