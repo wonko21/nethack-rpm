@@ -1,17 +1,17 @@
-%global nhgamedir /usr/games/nethack-3.4.3
+%global nhgamedir /usr/games/nethack-3.6.0
 %global nhdatadir /var/games/nethack
 
 %global fontname nethack-bitmap
 
 Name:           nethack
-Version:        3.4.3
-Release:        34%{?dist}
+Version:        3.6.0
+Release:        36%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
 License:        NGPL
 URL:            http://nethack.org
-Source0:        http://downloads.sourceforge.net/%{name}/%{name}-343-src.tgz
+Source0:        http://downloads.sourceforge.net/%{name}/%{name}-360-src.tgz
 Source1:        %{name}.desktop
 Patch0:         %{name}-%{version}-makefile.patch
 Patch1:         %{name}-%{version}-config.patch
@@ -169,6 +169,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 %changelog
+* Sun Oct 02 2016 Ron Olson <tachoknight@gmail.com> - 3.6.0-1
+- Upgraded to version 3.6.0
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 3.4.3-34
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
