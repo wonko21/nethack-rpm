@@ -1,7 +1,10 @@
 %global nhgamedir /usr/games/nethack-3.6.0
-%global nhdatadir /var/games/nethack
+#%global nhdatadir /var/games/nethack
+%global nhdatadir /usr/games/nethack-3.6.0
 
 %global fontname nethack-bitmap
+
+%global debug_package %{nil}
 
 Name:           nethack
 Version:        3.6.0
@@ -15,9 +18,7 @@ Source0:        http://downloads.sourceforge.net/%{name}/%{name}-360-src.tgz
 Source1:        %{name}.desktop
 Patch0:         %{name}-%{version}-makefile.patch
 Patch1:         %{name}-%{version}-config.patch
-Patch2:         %{name}-%{version}-x11.patch
-Patch3:         %{name}-%{version}-guidebook.patch
-Patch4:         %{name}-%{version}-format-security.patch
+Patch2:         %{name}-%{version}-guidebook.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires:       %{fontname}-fonts-core
 
@@ -71,10 +72,12 @@ X11 core fonts configuration for %{fontname}.
 %setup -q
 %patch0 -b .makefile
 %patch1 -b .config
-%patch2 -b .x11
-%patch3 -b .guidebook
-%patch4 -p1 -b .format-security
-(source sys/unix/setup.sh)
+%patch2 -b .guidebook
+#(source sys/unix/setup.sh)
+%{__sed} -i -e "s:PREFIX=\$(wildcard ~)/nh/install:PREFIX=/usr:" sys/unix/hints/linux
+%{__sed} -i -e "s:^\(HACKDIR=\).*:\1%{nhgamedir}:" sys/unix/hints/linux
+#%{__sed} -i -e "s:^\(VARDIR =\).*:\1%{nhdatadir}:" sys/unix/hints/linux
+sh sys/unix/setup.sh sys/unix/hints/linux
 
 # Set our paths
 %{__sed} -i -e "s:^\(HACKDIR=\).*:\1%{nhgamedir}:" sys/unix/nethack.sh
@@ -88,22 +91,21 @@ X11 core fonts configuration for %{fontname}.
 %{__sed} -i -e "s:-L/usr/X11R6/lib:-L/usr/X11R6/%{_lib}:" \
         src/Makefile util/Makefile
 
-
 %build
 make all
 
-
 %install
 rm -rf $RPM_BUILD_ROOT
-%makeinstall \
+%make_install \
+        PREFIX=$RPM_BUILD_ROOT \
+        HACKDIR=$RPM_BUILD_ROOT%{nhgamedir} \
         GAMEDIR=$RPM_BUILD_ROOT%{nhgamedir} \
         VARDIR=$RPM_BUILD_ROOT%{nhdatadir} \
         SHELLDIR=$RPM_BUILD_ROOT%{_bindir} \
         CHOWN=/bin/true \
         CHGRP=/bin/true
 
-rm -rf $RPM_BUILD_ROOT%{nhgamedir}/save
-mv $RPM_BUILD_ROOT%{nhgamedir}/recover $RPM_BUILD_ROOT%{_bindir}/nethack-recover
+#rm -rf $RPM_BUILD_ROOT%{nhgamedir}/save
 
 install -d -m 0755 $RPM_BUILD_ROOT%{_mandir}/man6
 make -C doc MANDIR=$RPM_BUILD_ROOT%{_mandir}/man6 manpages
@@ -127,7 +129,6 @@ install -m 0644 -p *.pcf $RPM_BUILD_ROOT%{_fontdir}
 %{__sed} -i -e 's:^!\(NetHack.tile_file.*\):\1:' \
         $RPM_BUILD_ROOT%{nhgamedir}/NetHack.ad
 
-
 %post -n %{fontname}-fonts-core
 mkfontdir %{_fontdir}
 if [ ! -L /etc/X11/fontpath.d/nethack ] ; then
@@ -145,7 +146,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files
-%defattr(-,root,root,-)
+#%defattr(-,root,root,-)
+%defattr(-,root,wheel,-)
 %doc doc/*.txt README dat/license dat/history
 %doc dat/opthelp dat/wizhelp
 %{_mandir}/man6/*
@@ -153,15 +155,28 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/applications/nethack.desktop
 %{nhgamedir}/nhdat
 %{_bindir}/nethack
-%{_bindir}/nethack-recover
+#%{_bindir}/nethack-recover
 %{nhgamedir}
-%defattr(0664,root,games)
+
+#%defattr(0664,root,games)
+#%defattr(0664,root,wheel)
+%defattr(0775,root,wheel)
 %config(noreplace) %{nhdatadir}/record
 %config(noreplace) %{nhdatadir}/perm
+%defattr(0664,root,wheel)
 %config(noreplace) %{nhdatadir}/logfile
-%attr(0775,root,games) %dir %{nhdatadir}
-%attr(0775,root,games) %dir %{nhdatadir}/save
-%attr(2755,root,games) %{nhgamedir}/nethack
+%config(noreplace) %{nhdatadir}/xlogfile
+%defattr(0644,root,wheel)
+%config(noreplace) %{nhdatadir}/sysconf
+
+
+
+#%attr(0775,root,games) %dir %{nhdatadir}
+#%attr(0775,root,games) %dir %{nhdatadir}/save
+#%attr(2755,root,games) %{nhgamedir}/nethack
+%attr(0775,root,wheel) %dir %{nhdatadir}
+%attr(0775,root,wheel) %dir %{nhdatadir}/save
+%attr(2755,root,wheel) %{nhgamedir}/nethack
 
 %_font_pkg -n bitmap *.pcf
 
