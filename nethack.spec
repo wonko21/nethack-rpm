@@ -73,10 +73,9 @@ X11 core fonts configuration for %{fontname}.
 %patch0 -b .makefile
 %patch1 -b .config
 %patch2 -b .guidebook
-#(source sys/unix/setup.sh)
+
 %{__sed} -i -e "s:PREFIX=\$(wildcard ~)/nh/install:PREFIX=/usr:" sys/unix/hints/linux
 %{__sed} -i -e "s:^\(HACKDIR=\).*:\1%{nhgamedir}:" sys/unix/hints/linux
-#%{__sed} -i -e "s:^\(VARDIR =\).*:\1%{nhdatadir}:" sys/unix/hints/linux
 sh sys/unix/setup.sh sys/unix/hints/linux
 
 # Set our paths
@@ -104,8 +103,6 @@ rm -rf $RPM_BUILD_ROOT
         SHELLDIR=$RPM_BUILD_ROOT%{_bindir} \
         CHOWN=/bin/true \
         CHGRP=/bin/true
-
-#rm -rf $RPM_BUILD_ROOT%{nhgamedir}/save
 
 install -d -m 0755 $RPM_BUILD_ROOT%{_mandir}/man6
 make -C doc MANDIR=$RPM_BUILD_ROOT%{_mandir}/man6 manpages
@@ -158,8 +155,6 @@ rm -rf $RPM_BUILD_ROOT
 #%{_bindir}/nethack-recover
 %{nhgamedir}
 
-#%defattr(0664,root,games)
-#%defattr(0664,root,wheel)
 %defattr(0775,root,wheel)
 %config(noreplace) %{nhdatadir}/record
 %config(noreplace) %{nhdatadir}/perm
@@ -168,12 +163,6 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{nhdatadir}/xlogfile
 %defattr(0644,root,wheel)
 %config(noreplace) %{nhdatadir}/sysconf
-
-
-
-#%attr(0775,root,games) %dir %{nhdatadir}
-#%attr(0775,root,games) %dir %{nhdatadir}/save
-#%attr(2755,root,games) %{nhgamedir}/nethack
 %attr(0775,root,wheel) %dir %{nhdatadir}
 %attr(0775,root,wheel) %dir %{nhdatadir}/save
 %attr(2755,root,wheel) %{nhgamedir}/nethack
