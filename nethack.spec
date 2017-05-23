@@ -1,10 +1,7 @@
 %global nhgamedir /usr/games/nethack-3.6.0
-#%global nhdatadir /var/games/nethack
-%global nhdatadir /usr/games/nethack-3.6.0
+%global nhdatadir /var/games/nethack
 
 %global fontname nethack-bitmap
-
-%global debug_package %{nil}
 
 Name:           nethack
 Version:        3.6.0
@@ -14,12 +11,11 @@ Summary:        A rogue-like single player dungeon exploration game
 Group:          Amusements/Games
 License:        NGPL
 URL:            http://nethack.org
-Source0:        http://downloads.sourceforge.net/%{name}/%{name}-360-src.tgz
+Source0:        https://sourceforge.net/projects/%{name}/files/%{name}/%{version}/%{name}-360-src.tgz
 Source1:        %{name}.desktop
 Patch0:         %{name}-%{version}-makefile.patch
 Patch1:         %{name}-%{version}-config.patch
 Patch2:         %{name}-%{version}-guidebook.patch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires:       %{fontname}-fonts-core
 
 BuildRequires:  ncurses-devel
@@ -47,7 +43,6 @@ characters: you can pick your race, your role, and your gender.
 
 %package -n %{fontname}-fonts
 Summary:        Bitmap fonts for Nethack
-Group:          User Interface/X
 BuildArch:      noarch
 Requires:       fontpackages-filesystem
 
@@ -56,7 +51,6 @@ Bitmap fonts for Nethack.
 
 %package -n %{fontname}-fonts-core
 Summary:         X11 core fonts configuration for %{fontname}
-Group:           User Interface/X
 BuildArch:      noarch
 Requires:        %{fontname}-fonts
 Requires(post):  %{fontname}-fonts
@@ -143,8 +137,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files
-#%defattr(-,root,root,-)
-%defattr(-,root,wheel,-)
+#%defattr(-,root,games,-)
 %doc doc/*.txt README dat/license dat/history
 %doc dat/opthelp dat/wizhelp
 %{_mandir}/man6/*
@@ -153,19 +146,26 @@ rm -rf $RPM_BUILD_ROOT
 %{nhgamedir}/nhdat
 %{_bindir}/nethack
 #%{_bindir}/nethack-recover
-%{nhgamedir}
+#%{nhgamedir}
 
-%defattr(0775,root,wheel)
+%defattr(0664,root,games)
 %config(noreplace) %{nhdatadir}/record
 %config(noreplace) %{nhdatadir}/perm
-%defattr(0664,root,wheel)
+#%defattr(0664,root,games)
 %config(noreplace) %{nhdatadir}/logfile
 %config(noreplace) %{nhdatadir}/xlogfile
-%defattr(0644,root,wheel)
-%config(noreplace) %{nhdatadir}/sysconf
-%attr(0775,root,wheel) %dir %{nhdatadir}
-%attr(0775,root,wheel) %dir %{nhdatadir}/save
-%attr(2755,root,wheel) %{nhgamedir}/nethack
+#%defattr(0644,root,games)
+%attr(0775,root,games) %dir %{nhdatadir}
+%attr(0775,root,games) %dir %{nhdatadir}/save
+%attr(2755,root,games) %{nhgamedir}/nethack
+%config(noreplace) %{nhgamedir}/sysconf
+%config(noreplace) %{nhgamedir}/NetHack.ad
+%config(noreplace) %{nhgamedir}/license
+%config(noreplace) %{nhgamedir}/pet_mark.xbm
+%config(noreplace) %{nhgamedir}/recover
+%config(noreplace) %{nhgamedir}/rip.xpm
+%config(noreplace) %{nhgamedir}/symbols
+%config(noreplace) %{nhgamedir}/x11tiles
 
 %_font_pkg -n bitmap *.pcf
 
@@ -173,7 +173,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 %changelog
-* Sun Oct 02 2016 Ron Olson <tachoknight@gmail.com> - 3.6.0-1
+* Sun Oct 02 2016 Ron Olson <tachoknight@gmail.com> - 3.6.0-36
 - Upgraded to version 3.6.0
 
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 3.4.3-34

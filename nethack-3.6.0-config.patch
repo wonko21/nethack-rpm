@@ -34,17 +34,8 @@
  #endif
  
  #ifndef COMPRESS
-@@ -298,7 +298,7 @@
-  *      a tar-like file, thus making a neater installation.  See *conf.h
-  *      for detailed configuration.
-  */
--/* #define DLB */ /* not supported on all platforms */
-+#define DLB  /* not supported on all platforms */
- 
- /*
-  *      Defining INSURANCE slows down level changes, but allows games that
---- include/unixconf.h.orig	2016-10-02 19:21:08.471471134 -0500
-+++ include/unixconf.h	2016-10-02 19:23:57.477720155 -0500
+--- include/unixconf.h.orig	2015-11-17 04:54:25.000000000 -0600
++++ include/unixconf.h	2017-05-22 13:48:46.766291818 -0500
 @@ -36,7 +36,7 @@
  #define NETWORK        /* if running on a networked system */
                         /* e.g. Suns sharing a playground through NFS */
@@ -54,6 +45,15 @@
  /* #define CYGWIN32 */ /* Unix on Win32 -- use with case sensitive defines */
  /* #define GENIX */    /* Yet Another Unix Clone */
  /* #define HISX */     /* Bull Unix for XPS Machines */
+@@ -101,7 +101,7 @@
+  * If you want the static parts of your playground on a read-only file
+  * system, define VAR_PLAYGROUND to be where the variable parts are kept.
+  */
+-/* #define VAR_PLAYGROUND "/var/lib/games/nethack" */
++#define VAR_PLAYGROUND "/var/games/nethack" 
+ 
+ /*
+  * Define DEF_PAGER as your default pager, e.g. "/bin/cat" or "/usr/ucb/more"
 @@ -128,7 +128,7 @@
   * "extra output" method is used, but not all systems provide access to
   * a fine-grained timer.
