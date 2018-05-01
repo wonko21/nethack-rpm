@@ -1,0 +1,198 @@
+--- include/config.h.orig	2018-05-01 09:31:13.354880333 -0500
++++ include/config.h	2018-05-01 09:35:04.487051694 -0500
+@@ -45,7 +45,7 @@
+ #if !defined(NOTTYGRAPHICS)
+ #define TTY_GRAPHICS /* good old tty based graphics */
+ #endif
+-/* #define X11_GRAPHICS */   /* X11 interface */
++#define X11_GRAPHICS   /* X11 interface */
+ /* #define QT_GRAPHICS */    /* Qt interface */
+ /* #define GNOME_GRAPHICS */ /* Gnome interface */
+ /* #define MSWIN_GRAPHICS */ /* Windows NT, CE, Graphics */
+@@ -127,7 +127,7 @@
+  * would allow:
+  *  xpmtoppm <x11tiles.xpm | pnmscale 1.25 | ppmquant 90 >x11tiles_big.xpm
+  */
+-/* # define USE_XPM */ /* Disable if you do not have the XPM library */
++#define USE_XPM /* Disable if you do not have the XPM library */
+ #ifdef USE_XPM
+ #define GRAPHIC_TOMBSTONE /* Use graphical tombstone (rip.xpm) */
+ #endif
+@@ -256,11 +256,11 @@
+ 
+ #if defined(UNIX) && !defined(ZLIB_COMP) && !defined(COMPRESS)
+ /* path and file name extension for compression program */
+-#define COMPRESS "/usr/bin/compress" /* Lempel-Ziv compression */
+-#define COMPRESS_EXTENSION ".Z"      /* compress's extension */
++/* #define COMPRESS "/usr/bin/compress" */ /* Lempel-Ziv compression */
++/* #define COMPRESS_EXTENSION ".Z" */     /* compress's extension */
+ /* An example of one alternative you might want to use: */
+-/* #define COMPRESS "/usr/local/bin/gzip" */ /* FSF gzip compression */
+-/* #define COMPRESS_EXTENSION ".gz" */       /* normal gzip extension */
++#define COMPRESS "/usr/bin/gzip"  /* FSF gzip compression */
++#define COMPRESS_EXTENSION ".gz"        /* normal gzip extension */
+ #endif
+ 
+ #ifndef COMPRESS
+@@ -304,7 +304,7 @@
+  *      a tar-like file, thus making a neater installation.  See *conf.h
+  *      for detailed configuration.
+  */
+-/* #define DLB */ /* not supported on all platforms */
++#define DLB /* not supported on all platforms */
+ 
+ /*
+  *      Defining REPRODUCIBLE_BUILD causes 'util/makedefs -v' to construct
+--- sys/unix/Makefile.src.orig	2018-05-01 09:36:40.773872371 -0500
++++ sys/unix/Makefile.src	2018-05-01 09:49:51.519299714 -0500
+@@ -66,7 +66,7 @@
+ #	if you get setcgtty() warnings during execution, you are feeding gcc
+ #		a non-ANSI <sys/ioctl.h> -- either run fixincludes on it or use
+ #		-traditional in CFLAGS
+-# CC = gcc
++CC = gcc
+ #
+ #	For Bull DPX/2 systems at B.O.S. 2.0 or higher use the following:
+ #
+@@ -134,6 +134,7 @@
+ #   OR compile backwards compatible a.out format
+ # CFLAGS = -O2 -b i486-linuxaout -fomit-frame-pointer -I../include
+ # LFLAGS = -b i486-linuxaout -L/usr/X11R6/lib
++LFLAGS = -L/usr/lib64/X11
+ 
+ # flags for BeOS
+ #   on a Mac/BeBox:
+@@ -245,8 +246,8 @@
+ 
+ #
+ #
+-#WINSRC = $(WINTTYSRC)
+-#WINOBJ = $(WINTTYOBJ)
++WINSRC = $(WINTTYSRC) $(WINX11SRC)
++WINOBJ = $(WINTTYOBJ) $(WINX11OBJ)
+ 
+ # on some systems the termcap library is in -ltermcap or -lcurses
+ # on 386 Xenix, the -ltermlib tputs() seems not to work; use -lcurses instead
+@@ -263,10 +264,12 @@
+ # WINTTYLIB = -lcurses16
+ # WINTTYLIB = -lncurses
+ #WINTTYLIB = -ltermlib
++WINTTYLIB = /usr/lib64/libncurses.a
++
+ #
+ # libraries for X11
+ # If USE_XPM is defined in config.h, you will also need -lXpm here.
+-WINX11LIB = -lXaw -lXmu -lXext -lXt -lX11
++WINX11LIB = -lXaw -lXmu -lXext -lXt -lX11 -lXpm
+ # WINX11LIB = -lXaw -lXmu -lXt -lX11
+ # WINX11LIB = -lXaw -lXmu -lXext -lXt -lXpm -lX11 -lm
+ # WINX11LIB = -lXaw -lXmu -lXpm -lXext -lXt -lX11 -lSM -lICE -lm # BSD/OS 2.0
+@@ -289,7 +292,7 @@
+ # libraries for BeOS 
+ WINBELIB = -lbe
+ 
+-#WINLIB = $(WINTTYLIB)
++WINLIB = $(WINTTYLIB) $(WINX11LIB)
+ 
+ # any other strange libraries your system needs (for Sysunix only -- the more
+ # specialized targets should already be right)
+--- sys/unix/Makefile.top.orig	2018-05-01 09:52:05.599638670 -0500
++++ sys/unix/Makefile.top	2018-05-01 09:55:11.363035590 -0500
+@@ -23,11 +23,11 @@
+ GAME     = nethack
+ # GAME     = nethack.prg
+ #GAMEUID  = games
+-#GAMEGRP  = bin
++GAMEGRP  = games
+ 
+ # Permissions - some places use setgid instead of setuid, for instance
+ # See also the option "SECURE" in include/config.h
+-#GAMEPERM = 04755
++GAMEPERM = 02755
+ FILEPERM = 0644
+ # VARFILEPERM = 0644
+ EXEPERM  = 0755
+@@ -49,7 +49,7 @@
+ # per discussion in Install.X11 and Install.Qt
+ #VARDATND = 
+ # VARDATND = x11tiles NetHack.ad pet_mark.xbm pilemark.xbm
+-# VARDATND = x11tiles NetHack.ad pet_mark.xbm pilemark.xbm rip.xpm
++VARDATND = x11tiles NetHack.ad pet_mark.xbm pilemark.xbm rip.xpm
+ # for Atari/Gem
+ # VARDATND = nh16.img title.img GEM_RSC.RSC rip.img
+ # for BeOS
+--- sys/unix/Makefile.utl.orig	2018-05-01 09:50:16.244284246 -0500
++++ sys/unix/Makefile.utl	2018-05-01 09:51:40.116623956 -0500
+@@ -20,7 +20,7 @@
+ 
+ # if you are using gcc as your compiler,
+ #	uncomment the CC definition below if it's not in your environment
+-# CC = gcc
++CC = gcc
+ #
+ #	For Bull DPX/2 systems at B.O.S. 2.0 or higher use the following:
+ #
+@@ -54,6 +54,7 @@
+ # flags for Atari GCC (3.3)
+ # CFLAGS = -mshort -O2 -I../include
+ # LFLAGS = -mshort -s
++LFLAGS = -L/usr/lib64/X11
+ 
+ # flags for Apollos using their native cc
+ # (as long as it claims to be __STDC__ but isn't)
+@@ -111,11 +112,11 @@
+ 
+ # yacc/lex programs to use to generate *_comp.h, *_lex.c, and *_yacc.c.
+ # if, instead of yacc/lex you have bison/flex, comment/uncomment the following.
+-YACC     = yacc
+-LEX      = lex
+-# YACC     = bison -y
++#YACC     = yacc
++#LEX      = lex
++YACC     = bison -y
+ # YACC     = byacc
+-# LEX      = flex
++LEX      = flex
+ 
+ # these are the names of the output files from YACC/LEX. Under MS-DOS
+ # and similar systems, they may differ
+--- src/Makefile.orig	2018-05-01 09:55:44.727364125 -0500
++++ src/Makefile	2018-05-01 09:56:17.701677127 -0500
+@@ -321,7 +321,7 @@
+ #
+ # libraries for X11
+ # If USE_XPM is defined in config.h, you will also need -lXpm here.
+-WINX11LIB = -lXaw -lXmu -lXext -lXt -lX11
++WINX11LIB = -lXaw -lXmu -lXext -lXt -lX11 -lXpm
+ # WINX11LIB = -lXaw -lXmu -lXt -lX11
+ # WINX11LIB = -lXaw -lXmu -lXext -lXt -lXpm -lX11 -lm
+ # WINX11LIB = -lXaw -lXmu -lXpm -lXext -lXt -lX11 -lSM -lICE -lm # BSD/OS 2.0
+--- include/unixconf.h.orig	2018-05-01 09:35:18.215596446 -0500
++++ include/unixconf.h	2018-05-01 09:36:10.185658626 -0500
+@@ -131,7 +131,7 @@
+  * "extra output" method is used, but not all systems provide access to
+  * a fine-grained timer.
+  */
+-/* #define TIMED_DELAY */ /* usleep() */
++#define TIMED_DELAY /* usleep() */
+ #endif
+ #if defined(MACOSX) && !defined(TIMED_DELAY)
+ #define TIMED_DELAY
+--- util/Makefile.orig	2018-05-01 09:56:28.649113047 -0500
++++ util/Makefile	2018-05-01 09:56:43.725713379 -0500
+@@ -166,11 +166,11 @@
+ 
+ # yacc/lex programs to use to generate *_comp.h, *_lex.c, and *_yacc.c.
+ # if, instead of yacc/lex you have bison/flex, comment/uncomment the following.
+-YACC     = yacc
+-LEX      = lex
+-# YACC     = bison -y
++#YACC     = yacc
++#LEX      = lex
++YACC     = bison -y
+ # YACC     = byacc
+-# LEX      = flex
++LEX      = flex
+ 
+ # these are the names of the output files from YACC/LEX. Under MS-DOS
+ # and similar systems, they may differ

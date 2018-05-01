@@ -1,21 +1,19 @@
-%global nhgamedir /usr/games/nethack-3.6.0
+%global nhgamedir /usr/games/nethack-3.6.1
 %global nhdatadir /var/games/nethack
 
 %global fontname nethack-bitmap
 
 Name:           nethack
-Version:        3.6.0
+Version:        3.6.1
 Release:        36%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
 License:        NGPL
 URL:            http://nethack.org
-Source0:        https://sourceforge.net/projects/%{name}/files/%{name}/%{version}/%{name}-360-src.tgz
+Source0:        https://github.com/NetHack/NetHack/archive/NetHack-3.6.1_Release.tar.gz
 Source1:        %{name}.desktop
-Patch0:         %{name}-%{version}-makefile.patch
-Patch1:         %{name}-%{version}-config.patch
-Patch2:         %{name}-%{version}-guidebook.patch
+Patch0:         %{name}-%{version}-config.patch
 Requires:       %{fontname}-fonts-core
 
 BuildRequires:  ncurses-devel
@@ -46,8 +44,10 @@ Summary:        Bitmap fonts for Nethack
 BuildArch:      noarch
 Requires:       fontpackages-filesystem
 
+
 %description -n %{fontname}-fonts
 Bitmap fonts for Nethack.
+
 
 %package -n %{fontname}-fonts-core
 Summary:         X11 core fonts configuration for %{fontname}
@@ -58,19 +58,20 @@ Requires(post):  xorg-x11-font-utils
 Requires(post):	 coreutils
 Requires(preun): coreutils
 
+
 %description -n %{fontname}-fonts-core
 X11 core fonts configuration for %{fontname}.
 
 
 %prep
-%setup -q
-%patch0 -b .makefile
-%patch1 -b .config
-%patch2 -b .guidebook
+%setup -q -n NetHack-NetHack-3.6.1_Release
 
 %{__sed} -i -e "s:PREFIX=\$(wildcard ~)/nh/install:PREFIX=/usr:" sys/unix/hints/linux
 %{__sed} -i -e "s:^\(HACKDIR=\).*:\1%{nhgamedir}:" sys/unix/hints/linux
-sh sys/unix/setup.sh sys/unix/hints/linux
+sh sys/unix/setup.sh sys/unix/hints/linux-x11
+
+# This patch is based on the sys/unix/README.Linux file in the source
+%patch0 -p0
 
 # Set our paths
 %{__sed} -i -e "s:^\(HACKDIR=\).*:\1%{nhgamedir}:" sys/unix/nethack.sh
@@ -84,8 +85,10 @@ sh sys/unix/setup.sh sys/unix/hints/linux
 %{__sed} -i -e "s:-L/usr/X11R6/lib:-L/usr/X11R6/%{_lib}:" \
         src/Makefile util/Makefile
 
+
 %build
 make all
+
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -116,9 +119,14 @@ bdftopcf -o nh10.pcf nh10.bdf
 bdftopcf -o ibm.pcf ibm.bdf
 install -m 0755 -d $RPM_BUILD_ROOT%{_fontdir}
 install -m 0644 -p *.pcf $RPM_BUILD_ROOT%{_fontdir}
+install -m 0644 NetHack.ad %{buildroot}%{nhgamedir}
+install -m 0644 pet_mark.xbm %{buildroot}%{nhgamedir}
+install -m 0644 rip.xpm %{buildroot}%{nhgamedir}
+# install -m 0644 x11tiles %{buildroot}%{nhgamedir}
 
 %{__sed} -i -e 's:^!\(NetHack.tile_file.*\):\1:' \
         $RPM_BUILD_ROOT%{nhgamedir}/NetHack.ad
+
 
 %post -n %{fontname}-fonts-core
 mkfontdir %{_fontdir}
@@ -126,11 +134,13 @@ if [ ! -L /etc/X11/fontpath.d/nethack ] ; then
     ln -s %{_fontdir} /etc/X11/fontpath.d/nethack
 fi
 
+
 %preun -n %{fontname}-fonts-core
 if [ $1 -eq 0 ] ; then 
     rm /etc/X11/fontpath.d/nethack
     rm %{_fontdir}/fonts.dir
 fi;
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -162,17 +172,26 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{nhgamedir}/NetHack.ad
 %config(noreplace) %{nhgamedir}/license
 %config(noreplace) %{nhgamedir}/pet_mark.xbm
-%config(noreplace) %{nhgamedir}/recover
+%config(noreplace) %attr(0555,root,games) %{nhgamedir}/recover
 %config(noreplace) %{nhgamedir}/rip.xpm
+%config(noreplace) %{nhgamedir}/pilemark.xbm
 %config(noreplace) %{nhgamedir}/symbols
 %config(noreplace) %{nhgamedir}/x11tiles
+%config(noreplace) %{nhgamedir}/fonts.dir
+%config(noreplace) %{nhgamedir}/nh10.pcf
+
 
 %_font_pkg -n bitmap *.pcf
+
 
 %files -n %{fontname}-fonts-core
 %defattr(-,root,root,-)
 
+
 %changelog
+* Mon Apr 30 2018 Ron Olson <tachoknight@gmail.com> - 3.6.1-1
+- Upgraded to version 3.6.1
+
 * Sun Oct 02 2016 Ron Olson <tachoknight@gmail.com> - 3.6.0-36
 - Upgraded to version 3.6.0
 
