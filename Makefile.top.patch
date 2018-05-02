@@ -1,0 +1,11 @@
+--- sys/unix/Makefile.top.orig	2018-05-02 15:01:59.419155535 -0500
++++ sys/unix/Makefile.top	2018-05-02 15:02:52.288507817 -0500
+@@ -49,7 +49,7 @@
+ # per discussion in Install.X11 and Install.Qt
+ #VARDATND = 
+ # VARDATND = x11tiles NetHack.ad pet_mark.xbm pilemark.xbm
+-# VARDATND = x11tiles NetHack.ad pet_mark.xbm pilemark.xbm rip.xpm
++VARDATND = x11tiles NetHack.ad pet_mark.xbm pilemark.xbm rip.xpm
+ # for Atari/Gem
+ # VARDATND = nh16.img title.img GEM_RSC.RSC rip.img
+ # for BeOS

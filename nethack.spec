@@ -1,19 +1,22 @@
-%global nhgamedir /usr/games/nethack-3.6.1
+%global nhgamedir /usr/games/nethack
 %global nhdatadir /var/games/nethack
 
 %global fontname nethack-bitmap
 
 Name:           nethack
 Version:        3.6.1
-Release:        36%{?dist}
+Release:        1%{?dist}
 Summary:        A rogue-like single player dungeon exploration game
 
 Group:          Amusements/Games
 License:        NGPL
 URL:            http://nethack.org
-Source0:        https://github.com/NetHack/NetHack/archive/NetHack-3.6.1_Release.tar.gz
+Source0:        https://sourceforge.net/projects/%{name}/files/%{name}/%{version}/%{name}-361-src.tgz
 Source1:        %{name}.desktop
-Patch0:         %{name}-%{version}-config.patch
+Patch0:         %{name}-%{version}-makefile.patch
+Patch1:         Makefile.top.patch
+Patch2:         %{name}-%{version}-config.patch
+Patch3:         %{name}-%{version}-guidebook.patch
 Requires:       %{fontname}-fonts-core
 
 BuildRequires:  ncurses-devel
@@ -44,10 +47,8 @@ Summary:        Bitmap fonts for Nethack
 BuildArch:      noarch
 Requires:       fontpackages-filesystem
 
-
 %description -n %{fontname}-fonts
 Bitmap fonts for Nethack.
-
 
 %package -n %{fontname}-fonts-core
 Summary:         X11 core fonts configuration for %{fontname}
@@ -58,20 +59,20 @@ Requires(post):  xorg-x11-font-utils
 Requires(post):	 coreutils
 Requires(preun): coreutils
 
-
 %description -n %{fontname}-fonts-core
 X11 core fonts configuration for %{fontname}.
 
 
 %prep
-%setup -q -n NetHack-NetHack-3.6.1_Release
+%setup -q
+%patch0 -b .makefile
+%patch1  
+%patch2 -b .config
+%patch3 -b .guidebook
 
 %{__sed} -i -e "s:PREFIX=\$(wildcard ~)/nh/install:PREFIX=/usr:" sys/unix/hints/linux
 %{__sed} -i -e "s:^\(HACKDIR=\).*:\1%{nhgamedir}:" sys/unix/hints/linux
-sh sys/unix/setup.sh sys/unix/hints/linux-x11
-
-# This patch is based on the sys/unix/README.Linux file in the source
-%patch0 -p0
+sh sys/unix/setup.sh sys/unix/hints/linux
 
 # Set our paths
 %{__sed} -i -e "s:^\(HACKDIR=\).*:\1%{nhgamedir}:" sys/unix/nethack.sh
@@ -85,10 +86,8 @@ sh sys/unix/setup.sh sys/unix/hints/linux-x11
 %{__sed} -i -e "s:-L/usr/X11R6/lib:-L/usr/X11R6/%{_lib}:" \
         src/Makefile util/Makefile
 
-
 %build
 make all
-
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -119,14 +118,9 @@ bdftopcf -o nh10.pcf nh10.bdf
 bdftopcf -o ibm.pcf ibm.bdf
 install -m 0755 -d $RPM_BUILD_ROOT%{_fontdir}
 install -m 0644 -p *.pcf $RPM_BUILD_ROOT%{_fontdir}
-install -m 0644 NetHack.ad %{buildroot}%{nhgamedir}
-install -m 0644 pet_mark.xbm %{buildroot}%{nhgamedir}
-install -m 0644 rip.xpm %{buildroot}%{nhgamedir}
-# install -m 0644 x11tiles %{buildroot}%{nhgamedir}
 
 %{__sed} -i -e 's:^!\(NetHack.tile_file.*\):\1:' \
         $RPM_BUILD_ROOT%{nhgamedir}/NetHack.ad
-
 
 %post -n %{fontname}-fonts-core
 mkfontdir %{_fontdir}
@@ -134,20 +128,17 @@ if [ ! -L /etc/X11/fontpath.d/nethack ] ; then
     ln -s %{_fontdir} /etc/X11/fontpath.d/nethack
 fi
 
-
 %preun -n %{fontname}-fonts-core
 if [ $1 -eq 0 ] ; then 
     rm /etc/X11/fontpath.d/nethack
     rm %{_fontdir}/fonts.dir
 fi;
 
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 
 %files
-#%defattr(-,root,games,-)
 %doc doc/*.txt README dat/license dat/history
 %doc dat/opthelp dat/wizhelp
 %{_mandir}/man6/*
@@ -155,16 +146,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/applications/nethack.desktop
 %{nhgamedir}/nhdat
 %{_bindir}/nethack
-#%{_bindir}/nethack-recover
-#%{nhgamedir}
-
 %defattr(0664,root,games)
 %config(noreplace) %{nhdatadir}/record
 %config(noreplace) %{nhdatadir}/perm
-#%defattr(0664,root,games)
 %config(noreplace) %{nhdatadir}/logfile
 %config(noreplace) %{nhdatadir}/xlogfile
-#%defattr(0644,root,games)
 %attr(0775,root,games) %dir %{nhdatadir}
 %attr(0775,root,games) %dir %{nhdatadir}/save
 %attr(2755,root,games) %{nhgamedir}/nethack
@@ -177,20 +163,28 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{nhgamedir}/pilemark.xbm
 %config(noreplace) %{nhgamedir}/symbols
 %config(noreplace) %{nhgamedir}/x11tiles
-%config(noreplace) %{nhgamedir}/fonts.dir
-%config(noreplace) %{nhgamedir}/nh10.pcf
-
 
 %_font_pkg -n bitmap *.pcf
-
 
 %files -n %{fontname}-fonts-core
 %defattr(-,root,root,-)
 
-
 %changelog
-* Mon Apr 30 2018 Ron Olson <tachoknight@gmail.com> - 3.6.1-1
-- Upgraded to version 3.6.1
+* Wed May 02 2018 Ron Olson <tachoknight@gmail.com> 3.6.1-1
+- First version of 3.6.1
+
+* Thu Aug 03 2017 Fedora Release Engineering <releng@fedoraproject.org> - 3.6.0-40
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
+
+* Wed Jul 26 2017 Fedora Release Engineering <releng@fedoraproject.org> - 3.6.0-39
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
+* Mon Jun 26 2017 Ron Olson <tachoknight@gmail.com> - 3.6.0-38
+- Added pilemark.xbm to game directory to fix error when playing 
+  under X11
+
+* Mon Jun 05 2017 Ron Olson <tachoknight@gmail.com> - 3.6.0-37
+- Set executable bit on recover program
 
 * Sun Oct 02 2016 Ron Olson <tachoknight@gmail.com> - 3.6.0-36
 - Upgraded to version 3.6.0
