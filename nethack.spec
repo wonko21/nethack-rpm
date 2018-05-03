@@ -144,8 +144,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man6/*
 %{_datadir}/pixmaps/nethack.xpm
 %{_datadir}/applications/nethack.desktop
-%{nhgamedir}/nhdat
 %{_bindir}/nethack
+%{nhgamedir}
 %defattr(0664,root,games)
 %config(noreplace) %{nhdatadir}/record
 %config(noreplace) %{nhdatadir}/perm
@@ -154,6 +154,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0775,root,games) %dir %{nhdatadir}
 %attr(0775,root,games) %dir %{nhdatadir}/save
 %attr(2755,root,games) %{nhgamedir}/nethack
+%config(noreplace) %{nhgamedir}/nhdat
 %config(noreplace) %{nhgamedir}/sysconf
 %config(noreplace) %{nhgamedir}/NetHack.ad
 %config(noreplace) %{nhgamedir}/license
