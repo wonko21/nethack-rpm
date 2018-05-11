@@ -55,7 +55,17 @@ Summary:         X11 core fonts configuration for %{fontname}
 BuildArch:      noarch
 Requires:        %{fontname}-fonts
 Requires(post):  %{fontname}-fonts
-Requires(post):  xorg-x11-font-utils
+%if 0%{?suse_version} >= 1220
+BuildRequires: bdftopcf
+BuildRequires: mkfontdir
+%else
+%if 0%{?fedora_version}
+BuildRequires: xorg-x11-font-utils
+%else
+BuildRequires: xorg-x11
+BuildRequires: xorg-x11-devel
+%endif
+%endif
 Requires(post):	 coreutils
 Requires(preun): coreutils
 
