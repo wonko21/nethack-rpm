@@ -1,7 +1,8 @@
-%global nhgamedir /usr/games/nethack
-%global nhdatadir /var/games/nethack
+%global nhgamedir %{_datadir}/%{name} 
+%global nhdatadir %{_localstatedir}/games/%{name} 
 
 %global fontname nethack-bitmap
+
 
 Name:           nethack
 Version:        3.6.1
@@ -93,13 +94,18 @@ sh sys/unix/setup.sh sys/unix/hints/linux
 make all
 
 %install
+
+%if 0%{?suse_version} >= 1220
+%define _fontdir %{_fontsdir}/%{fontname}
+%endif
+
 rm -rf $RPM_BUILD_ROOT
 %make_install \
         PREFIX=$RPM_BUILD_ROOT \
         HACKDIR=$RPM_BUILD_ROOT%{nhgamedir} \
-        GAMEDIR=$RPM_BUILD_ROOT%{nhgamedir} \
+        GAMEDIR=$RPM_BUILD_ROOT%{nhdatadir} \
         VARDIR=$RPM_BUILD_ROOT%{nhdatadir} \
-        SHELLDIR=$RPM_BUILD_ROOT%{_bindir} \
+        SHELLDIR=$RPM_BUILD_ROOT%{nhgamedir} \
         CHOWN=/bin/true \
         CHGRP=/bin/true
 
@@ -115,6 +121,12 @@ desktop-file-install \
         --add-category RolePlaying \
         %{SOURCE1}
 
+# move the nethack and recover binaries
+mkdir -p $RPM_BUILD_ROOT%{_bindir}
+mv $RPM_BUILD_ROOT%{nhgamedir}/nethack $RPM_BUILD_ROOT%{_bindir}
+mv $RPM_BUILD_ROOT%{nhgamedir}/recover $RPM_BUILD_ROOT%{_bindir}
+
+
 # Install the fonts for the X11 interface
 cd win/X11
 bdftopcf -o nh10.pcf nh10.bdf
@@ -127,13 +139,16 @@ install -m 0644 -p *.pcf $RPM_BUILD_ROOT%{_fontdir}
 
 %post -n %{fontname}-fonts-core
 mkfontdir %{_fontdir}
+%if 0%{!?suse_version} 
 if [ ! -L /etc/X11/fontpath.d/nethack ] ; then
     ln -s %{_fontdir} /etc/X11/fontpath.d/nethack
 fi
-
+%endif
 %preun -n %{fontname}-fonts-core
 if [ $1 -eq 0 ] ; then 
+%if 0%{!?suse_version}
     rm /etc/X11/fontpath.d/nethack
+%endif
     rm %{_fontdir}/fonts.dir
 fi;
 
@@ -148,7 +163,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pixmaps/nethack.xpm
 %{_datadir}/applications/nethack.desktop
 %{_bindir}/nethack
-%{nhgamedir}
+%{_bindir}/recover
+%dir %{nhgamedir}
+%dir %{nhdatadir}
+%dir /var/games
 %defattr(0664,root,games)
 %config(noreplace) %{nhdatadir}/record
 %config(noreplace) %{nhdatadir}/perm
@@ -156,20 +174,18 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{nhdatadir}/xlogfile
 %attr(0775,root,games) %dir %{nhdatadir}
 %attr(0775,root,games) %dir %{nhdatadir}/save
-%attr(2755,root,games) %{nhgamedir}/nethack
 %config(noreplace) %{nhgamedir}/nhdat
 %config(noreplace) %{nhgamedir}/sysconf
 %config(noreplace) %{nhgamedir}/NetHack.ad
 %config(noreplace) %{nhgamedir}/license
 %config(noreplace) %{nhgamedir}/pet_mark.xbm
-%config(noreplace) %attr(0555,root,games) %{nhgamedir}/recover
 %config(noreplace) %{nhgamedir}/rip.xpm
 %config(noreplace) %{nhgamedir}/pilemark.xbm
 %config(noreplace) %{nhgamedir}/symbols
 %config(noreplace) %{nhgamedir}/x11tiles
 
 %if 0%{?suse_version} >= 1220
-#reconfigure_fonts_scriptlets -n %{fontname}-fonts-core 
+#reconfigure_fonts_scriptlets 
 %else
 %_font_pkg -n bitmap *.pcf
 %endif
@@ -177,6 +193,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n %{fontname}-fonts-core
 %defattr(-,root,root,-)
+%if 0%{?suse_version} >= 1220
+%dir %{_fontdir}
+%{_fontdir}/*
+%endif
 
 %changelog
 * Wed May 02 2018 Ron Olson <tachoknight@gmail.com> 3.6.1-1
