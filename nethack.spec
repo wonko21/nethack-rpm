@@ -56,18 +56,11 @@ BuildArch:      noarch
 Requires:        %{fontname}-fonts
 Requires(post):  %{fontname}-fonts
 %if 0%{?suse_version} >= 1220
-BuildRequires: bdftopcf
-BuildRequires: mkfontdir
+%reconfigure_fonts_prereq
 %else
-%if 0%{?fedora_version}
-BuildRequires: xorg-x11-font-utils
-%else
-BuildRequires: xorg-x11
-BuildRequires: xorg-x11-devel
-%endif
-%endif
 Requires(post):	 coreutils
 Requires(preun): coreutils
+%endif
 
 %description -n %{fontname}-fonts-core
 X11 core fonts configuration for %{fontname}.
@@ -175,7 +168,12 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{nhgamedir}/symbols
 %config(noreplace) %{nhgamedir}/x11tiles
 
+%if 0%{?suse_version} >= 1220
+#reconfigure_fonts_scriptlets -n %{fontname}-fonts-core 
+%else
 %_font_pkg -n bitmap *.pcf
+%endif
+
 
 %files -n %{fontname}-fonts-core
 %defattr(-,root,root,-)
